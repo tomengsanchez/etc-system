@@ -1,14 +1,14 @@
 <?php
   // DB Params
   define('DB_HOST', 'localhost');
-  define('DB_USER', 'root');
-  define('DB_PASS', '');
+  define('DB_USER', 'ms1user');
+  define('DB_PASS', 'mainsystem#67');
   define('DB_NAME', 'enroll');
 
   // App Root - dynamically gets the absolute path to the app folder
   define('APPROOT', dirname(dirname(__FILE__)));
   // URL Root
-  define('URLROOT', 'http://localhost/etc-system');
+  define('URLROOT', 'https://ithelp.ecosyscorp.ph/etc-system');
   // Site Name
   define('SITENAME', 'Ecosys Training Center');
 
