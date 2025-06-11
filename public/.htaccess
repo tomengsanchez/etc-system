@@ -1,0 +1,11 @@
+# This rule enables the rewrite engine
+RewriteEngine On
+
+# These conditions check if the requested URL is NOT a file and NOT a directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# This rule takes whatever is in the URL, puts it into a 'url' GET parameter,
+# and sends the request to index.php.
+# Example: http://yourdomain.com/courses/php/1 -> /index.php?url=courses/php/1
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
