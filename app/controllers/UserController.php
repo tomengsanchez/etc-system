@@ -1,7 +1,8 @@
 <?php
+
   class UserController extends Controller{
-    private $userModel; // <-- Add this line
-    
+    private $userModel;
+
     public function __construct(){
       $this->userModel = $this->model('User');
     }
@@ -9,15 +10,10 @@
     public function register(){
       // Check for POST
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        // 1. VALIDATE CSRF TOKEN
-        if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
-          // You can redirect, show an error, or kill the script.
-          // Killing the script is simple and secure for this example.
-          die('Invalid CSRF token.');
-        }
-
+        // Process form
+  
         // Sanitize POST data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // Init data
         $data =[
@@ -31,8 +27,37 @@
           'confirm_password_err' => ''
         ];
 
-        // ... (rest of the existing validation logic) ...
-        
+        // Validate Email
+        if(empty($data['email'])){
+          $data['email_err'] = 'Pleae enter email';
+        } else {
+          // Check email
+          if($this->userModel->findUserByEmail($data['email'])){
+            $data['email_err'] = 'Email is already taken';
+          }
+        }
+
+        // Validate Name
+        if(empty($data['name'])){
+          $data['name_err'] = 'Pleae enter name';
+        }
+
+        // Validate Password
+        if(empty($data['password'])){
+          $data['password_err'] = 'Pleae enter password';
+        } elseif(strlen($data['password']) < 6){
+          $data['password_err'] = 'Password must be at least 6 characters';
+        }
+
+        // Validate Confirm Password
+        if(empty($data['confirm_password'])){
+          $data['confirm_password_err'] = 'Pleae confirm password';
+        } else {
+          if($data['password'] != $data['confirm_password']){
+            $data['confirm_password_err'] = 'Passwords do not match';
+          }
+        }
+
         // Make sure errors are empty
         if(empty($data['email_err']) && empty($data['name_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
           // Validated
@@ -42,8 +67,8 @@
 
           // Register User
           if($this->userModel->register($data)){
-            flash('register_success', 'You are registered and can log in');
-            redirect('users/login');
+            flash('success', 'You are registered and can log in');
+            redirect('user/login');
           } else {
             die('Something went wrong');
           }
@@ -74,13 +99,9 @@
     public function login(){
       // Check for POST
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        // 1. VALIDATE CSRF TOKEN
-        if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
-          die('Invalid CSRF token.');
-        }
-
+        // Process form
         // Sanitize POST data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         
         // Init data
         $data =[
@@ -90,7 +111,23 @@
           'password_err' => '',      
         ];
 
-        // ... (rest of the existing validation logic) ...
+        // Validate Email
+        if(empty($data['email'])){
+          $data['email_err'] = 'Pleae enter email';
+        }
+
+        // Validate Password
+        if(empty($data['password'])){
+          $data['password_err'] = 'Please enter password';
+        }
+
+        // Check for user/email
+        if($this->userModel->findUserByEmail($data['email'])){
+          // User found
+        } else {
+          // User not found
+          $data['email_err'] = 'No user found';
+        }
 
         // Make sure errors are empty
         if(empty($data['email_err']) && empty($data['password_err'])){
@@ -126,20 +163,20 @@
       }
     }
 
-       public function createUserSession($user){
+    public function createUserSession($user){
       $_SESSION['user_id'] = $user->id;
       $_SESSION['user_email'] = $user->email;
       $_SESSION['user_name'] = $user->name;
-      // Redirect to the new dashboard
+      $_SESSION['user_role'] = $user->role_name; // Add user role to session
       redirect('dashboard');
     }
-
 
     public function logout(){
       unset($_SESSION['user_id']);
       unset($_SESSION['user_email']);
       unset($_SESSION['user_name']);
+      unset($_SESSION['user_role']); // Remove user role from session
       session_destroy();
-      redirect('users/login');
+      redirect('user/login');
     }
   }

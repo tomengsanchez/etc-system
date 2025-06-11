@@ -1,32 +1,132 @@
 <?php
+class CourseController extends Controller {
+    private $courseModel;
+    private $userModel;
 
-/**
- * CourseController
- *
- * Handles logic related to courses.
- */
-class CourseController extends Controller
-{
-    /**
-     * The index method is the default for this controller.
-     * It fetches all courses and displays them.
-     */
-    public function index()
-    {
-        // Load the Course model.
-        // The model() method is in the base Controller class.
-        $courseModel = $this->model('Course');
+    public function __construct(){
+        if(!isLoggedIn()){
+            redirect('user/login');
+        }
 
-        // Call the model's method to get the data.
-        $courses = $courseModel->getAllCourses();
+        $this->courseModel = $this->model('Course');
+        $this->userModel = $this->model('User');
+    }
 
-        // Prepare the data to be passed to the view.
+    public function index(){
+        $courses = $this->courseModel->getAllCourses();
         $data = [
-            'title' => 'Available Courses',
-            'courses' => $courses
+            'courses' => $courses,
+            'title' => 'Courses' // Added missing title
         ];
-
-        // Load the view and pass the data.
         $this->view('course/index', $data);
+    }
+
+    public function create(){
+        if(!isAdmin() && !isTeacher()){
+            flash('danger', 'Unauthorized access to that page');
+            redirect('course');
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $data = [
+                'name' => trim($_POST['name']),
+                'description' => trim($_POST['description']),
+                'user_id' => $_SESSION['user_id'],
+                'name_err' => '',
+                'description_err' => ''
+            ];
+
+            if(empty($data['name'])){
+                $data['name_err'] = 'Please enter course name';
+            }
+            if(empty($data['description'])){
+                $data['description_err'] = 'Please enter a description';
+            }
+
+            if(empty($data['name_err']) && empty($data['description_err'])){
+                if($this->courseModel->addCourse($data)){
+                    flash('success', 'Course Added');
+                    redirect('course');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                $this->view('course/create', $data);
+            }
+        } else {
+            $data = [
+                'name' => '',
+                'description' => '',
+                'name_err' => '',
+                'description_err' => ''
+            ];
+            $this->view('course/create', $data);
+        }
+    }
+
+    public function edit($id){
+        if(!isAdmin() && !isTeacher()){
+            flash('danger', 'Unauthorized access to that page');
+            redirect('course');
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $data = [
+                'id' => $id,
+                'name' => trim($_POST['name']),
+                'description' => trim($_POST['description']),
+                'name_err' => '',
+                'description_err' => ''
+            ];
+
+            if(empty($data['name'])){
+                $data['name_err'] = 'Please enter course name';
+            }
+             if(empty($data['description'])){
+                $data['description_err'] = 'Please enter a description';
+            }
+
+            if(empty($data['name_err']) && empty($data['description_err'])){
+                if($this->courseModel->updateCourse($data)){
+                    flash('success', 'Course Updated');
+                    redirect('course');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                $this->view('course/edit', $data);
+            }
+        } else {
+            $course = $this->courseModel->getCourseById($id);
+            if(!$course){
+                redirect('course');
+            }
+            $data = [
+                'id' => $id,
+                'name' => $course->name,
+                'description' => $course->description
+            ];
+            $this->view('course/edit', $data);
+        }
+    }
+
+    public function delete($id){
+        if(!isAdmin() && !isTeacher()){
+            flash('danger', 'Unauthorized access to that page');
+            redirect('course');
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            if($this->courseModel->deleteCourse($id)){
+                flash('success', 'Course Removed');
+                redirect('course');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            redirect('course');
+        }
     }
 }

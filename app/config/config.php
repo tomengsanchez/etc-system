@@ -14,6 +14,7 @@
 
   // Load Helpers using the APPROOT constant for a reliable path
   require_once APPROOT . '/helpers/session_helper.php';
+    require_once APPROOT . '/helpers/role_helper.php'; // <-- This line fixes the error
   // I am assuming url_helper.php is also in the helpers directory
   // If it's not, you may need to adjust or remove this line.
   if (file_exists(APPROOT . '/helpers/url_helper.php')) {

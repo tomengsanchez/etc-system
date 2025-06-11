@@ -1,10 +1,21 @@
 --
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'admin'),
+(2, 'student'),
+(3, 'teacher');
+
+--
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`) VALUES
-(1, 'michael sanchez', 'admin@example.com', '$2y$10$8qDFHCQZXm6hi3ChuiN0ruZDETONlSOBfOFoRaw/ApwSuMnDXVDV6', '2025-06-11 08:29:07');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role_id`) VALUES
+(1, 'Admin User', 'admin@example.com', '$2y$10$9T8hU1Ybka63.xs7SL51kuX1w2QZVTQUxgD7nKbrG3ZQJnOz3OdTm', 1),
+(2, 'Student User', 'student@example.com', '$2y$10$iusesomecrazystrings22/T5H5Gq.t6g2g.WvHLeH6Yg1nU1nU1', 2),
+(3, 'Teacher User', 'teacher@example.com', '$2y$10$iusesomecrazystrings22/T5H5Gq.t6g2g.WvHLeH6Yg1nU1nU1', 3);
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `courses`
 --
