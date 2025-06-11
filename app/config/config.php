@@ -1,30 +1,30 @@
 <?php
-// app/config/config.php
+  // DB Params
+  define('DB_HOST', 'localhost');
+  define('DB_USER', 'root');
+  define('DB_PASS', '123456');
+  define('DB_NAME', 'ecosys_db');
 
-/**
- * Configuration Settings
- *
- * This file contains the configuration settings for the application.
- * Using constants makes these values globally accessible and prevents them
- * from being changed during runtime.
- */
+  // App Root - dynamically gets the absolute path to the app folder
+  define('APPROOT', dirname(dirname(__FILE__)));
+  // URL Root
+  define('URLROOT', 'http://localhost/etc-system');
+  // Site Name
+  define('SITENAME', 'Ecosys Training Center');
 
-// --- Database Configuration ---
-// These settings are used by the Database class to connect to your database.
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root'); // Your database username
-define('DB_PASS', '');     // Your database password
-define('DB_NAME', 'enroll'); // Your database name
+  // Load Helpers using the APPROOT constant for a reliable path
+  require_once APPROOT . '/helpers/session_helper.php';
+  // I am assuming url_helper.php is also in the helpers directory
+  // If it's not, you may need to adjust or remove this line.
+  if (file_exists(APPROOT . '/helpers/url_helper.php')) {
+    require_once APPROOT . '/helpers/url_helper.php';
+  }
 
-// --- Application Configuration ---
-// APPROOT: The absolute path to the 'app' directory.
-// Example: C:\xampp\htdocs\your-project\app
-define('APPROOT', dirname(dirname(__FILE__)));
 
-// URLROOT: The root URL of your site.
-// This is useful for creating absolute links in your views and controllers.
-// Example: http://localhost/your-project
-define('URLROOT', 'http://localhost/etc-system');
+  // Generate CSRF token for the session
+  generate_csrf_token();
 
-// SITENAME: The name of your site.
-define('SITENAME', 'Ecosys Training Center');
+  // Autoload Core Libraries
+  spl_autoload_register(function($className){
+    require_once APPROOT . '/core/' . $className . '.php';
+  });
