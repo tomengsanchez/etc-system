@@ -17,7 +17,33 @@ class App
     {
         $url = $this->parseUrl();
 
-        // --- Controller Handling ---
+        // --- API Route Handling ---
+        // Check if the first part of the URL is 'api'.
+        if (isset($url[0]) && $url[0] == 'api') {
+            // Shift 'api' off the URL array
+            array_shift($url);
+
+            // Set controller to ApiController
+            $this->controller = 'ApiController';
+            require_once '../app/controllers/' . $this->controller . '.php';
+            $this->controller = new $this->controller;
+
+            // Check for the method in the URL (e.g., /api/login)
+            if (isset($url[0])) {
+                if (method_exists($this->controller, $url[0])) {
+                    $this->method = $url[0];
+                    unset($url[0]);
+                }
+            }
+             // Any remaining parts of the URL are treated as parameters.
+            $this->params = $url ? array_values($url) : [];
+
+            // Call the API controller's method with the parameters.
+            call_user_func_array([$this->controller, $this->method], $this->params);
+            return; // Stop processing for API routes
+        }
+
+        // --- Controller Handling (Web) ---
         // Look for a controller file that matches the first part of the URL.
         // We use ucfirst() to ensure the first letter of the class name is uppercase.
         if (isset($url[0]) && file_exists('../app/controllers/' . ucfirst($url[0]) . 'Controller.php')) {
@@ -35,7 +61,7 @@ class App
         $this->controller = new $this->controller;
 
 
-        // --- Method Handling ---
+        // --- Method Handling (Web) ---
         // Check if a method is specified in the second part of the URL.
         if (isset($url[1])) {
             // Check if the method exists within the controller class.
@@ -45,7 +71,7 @@ class App
             }
         }
 
-        // --- Parameters Handling ---
+        // --- Parameters Handling (Web) ---
         // Any remaining parts of the URL are treated as parameters.
         $this->params = $url ? array_values($url) : [];
 

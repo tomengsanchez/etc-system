@@ -19,6 +19,10 @@
   if (file_exists(APPROOT . '/helpers/url_helper.php')) {
     require_once APPROOT . '/helpers/url_helper.php';
   }
+  // Load API helper
+  if (file_exists(APPROOT . '/helpers/api_helper.php')) {
+    require_once APPROOT . '/helpers/api_helper.php';
+  }
 
 
   // Generate CSRF token for the session
