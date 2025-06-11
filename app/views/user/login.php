@@ -26,6 +26,7 @@
         <?php flash('register_success'); ?>
         <p>Please fill in your credentials to log in.</p>
         <form action="<?= URLROOT; ?>/user/login" method="post">
+             <input type="hidden" name="csrf_token" value="<?= get_csrf_token(); ?>">
             <div class="form-group">
                 <label for="email">Email: <sup>*</sup></label>
                 <input type="email" name="email" class="<?= (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['email']; ?>">

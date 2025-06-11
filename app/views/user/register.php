@@ -24,6 +24,7 @@
         <h2>Create An Account</h2>
         <p>Please fill out this form to register.</p>
         <form action="<?= URLROOT; ?>/user/register" method="post">
+             <input type="hidden" name="csrf_token" value="<?= get_csrf_token(); ?>">
             <div class="form-group">
                 <label for="name">Name: <sup>*</sup></label>
                 <input type="text" name="name" class="<?= (!empty($data['name_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['name']; ?>">

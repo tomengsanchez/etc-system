@@ -2,8 +2,8 @@
   // DB Params
   define('DB_HOST', 'localhost');
   define('DB_USER', 'root');
-  define('DB_PASS', '123456');
-  define('DB_NAME', 'ecosys_db');
+  define('DB_PASS', '');
+  define('DB_NAME', 'enroll');
 
   // App Root - dynamically gets the absolute path to the app folder
   define('APPROOT', dirname(dirname(__FILE__)));

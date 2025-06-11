@@ -1,5 +1,7 @@
 <?php
   class UserController extends Controller{
+    private $userModel; // <-- Add this line
+    
     public function __construct(){
       $this->userModel = $this->model('User');
     }
