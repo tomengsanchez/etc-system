@@ -13,6 +13,16 @@
     </style>
 </head>
 <body>
+    <nav>
+    <a href="<?= URLROOT; ?>">Home</a>
+    <?php if(isLoggedIn()) : ?>
+        <a href="<?= URLROOT; ?>/user/logout">Logout</a>
+    <?php else : ?>
+        <a href="<?= URLROOT; ?>/user/login">Login</a>
+        <a href="<?= URLROOT; ?>/user/register">Register</a>
+    <?php endif; ?>
+</nav>
+
     <!-- The h1 and p tags also use data from the controller -->
     <h1><?= $data['title']; ?></h1>
     <p><?= $data['description']; ?></p>

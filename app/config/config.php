@@ -24,7 +24,7 @@ define('APPROOT', dirname(dirname(__FILE__)));
 // URLROOT: The root URL of your site.
 // This is useful for creating absolute links in your views and controllers.
 // Example: http://localhost/your-project
-define('URLROOT', 'http://localhost/your-mvc-project');
+define('URLROOT', 'http://localhost/etc-system');
 
 // SITENAME: The name of your site.
 define('SITENAME', 'Ecosys Training Center');
