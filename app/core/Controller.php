@@ -23,7 +23,7 @@ class Controller
     }
 
     /**
-     * Load a view.
+     * Load a view with header and footer.
      *
      * @param string $view The path to the view file.
      * @param array $data Data to be extracted and made available to the view.
@@ -32,9 +32,14 @@ class Controller
     {
         // Check if the view file exists.
         if (file_exists('../app/views/' . $view . '.php')) {
-            // Require the view file, which will render it.
-            // The data array is passed and can be accessed within the view.
+            // Include header
+            require_once '../app/views/inc/header.php';
+            
+            // Require the specific view file
             require_once '../app/views/' . $view . '.php';
+
+            // Include footer
+            require_once '../app/views/inc/footer.php';
         } else {
             // If the view does not exist, stop the application and show an error.
             die('View does not exist: ' . $view);
