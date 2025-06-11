@@ -31,10 +31,17 @@
         <ul class="navbar-nav ms-auto">
           <?php if(isset($_SESSION['user_id'])) : ?>
             <li class="nav-item">
-                <a class="nav-link" href="#">Welcome, <?= $_SESSION['user_name']; ?></a>
+                <a class="nav-link" href="<?= URLROOT; ?>/dashboard">Dashboard</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?= URLROOT; ?>/user/logout">Logout</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Welcome, <?= $_SESSION['user_name']; ?>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="<?= URLROOT; ?>/user/logout">Logout</a></li>
+                </ul>
             </li>
           <?php else : ?>
             <li class="nav-item">
@@ -48,6 +55,9 @@
       </div>
     </div>
 </nav>
+
+<!-- This requires Bootstrap's JavaScript bundle for the dropdown to work -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <div class="container">
     <?php flash('register_success'); ?>

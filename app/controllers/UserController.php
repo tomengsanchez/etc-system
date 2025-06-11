@@ -126,12 +126,14 @@
       }
     }
 
-    public function createUserSession($user){
+       public function createUserSession($user){
       $_SESSION['user_id'] = $user->id;
       $_SESSION['user_email'] = $user->email;
       $_SESSION['user_name'] = $user->name;
-      redirect('courses');
+      // Redirect to the new dashboard
+      redirect('dashboard');
     }
+
 
     public function logout(){
       unset($_SESSION['user_id']);
